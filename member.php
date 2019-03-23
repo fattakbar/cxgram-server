@@ -13,7 +13,6 @@
     // $post = array('username'=>'akbar', 'password'=>'akbar', 'aksi'=>'edit');
     if($post['aksi'] == "daftar"){
         $password = md5($post['password']);
-
         $jml = mysqli_num_rows(mysqli_query($mysqli, "SELECT * FROM member WHERE username='$post[username]'"));
         echo $mysqli_error($mysqli);
 
@@ -28,7 +27,34 @@
 
             if($query) $result = json_encode(array('success'=>true));
             else $result = json_encode(array('success'=>false, 'msg'=>'Tidak Dapat Menyimpan Data'));
+        }else{
+            $msq = "Username Sudah Digunakan";
+            $result = json_encode(array('success'=>false, 'msg'=>$msq));
         }
+        echo $result;
+    }else if($post['aksi'] == "login"){
+        $password = md5($post['password']);
+        $query = mysqli_query($mysqli, "SELECT * FROM member WHERE username='$post[username]' AND password='$password'");
+        $jml = mysqli_num_rows($query);
+
+        if($jml > 0){
+            $data = mysqli_fetch_array($query);
+            $photo = file_get_contents($data['photo']);
+            $datamember = array(
+                'id_member' => $data['id_member'],
+                'nama'      => $data['name'],
+                'email'     => $data['email'],
+                'username'  => $data['username'],
+                'password'  => $data['password'],
+                'foto'      => base64_encode($photo)
+            );
+
+            if($query) $result = json_encode(array('success'=>true, 'result'=>$datamember));
+            else $result = json_encode(array('success'=>false, 'msg'=>'Login Gagal'));
+        }else{
+            $result = json_encode(array('success'=>false, 'msg'=>'Akun Tidak Terdaftar'));
+        }
+        echo $result;
     }
 
 ?>
