@@ -73,6 +73,24 @@
             else $result = json_encode(array('success'=>false));
             echo $result;
         }
+    }else if($post['aksi'] == "edit"){
+        if(member_valid($post['username'], $post['password'])){
+            $entry = base64_decode($post['foto']);
+            $image = imagecreatefromstring($entry);
+            $tgl = date('Y-m-d H-i-s');
+            $directory = "images/member/member ".$tgl.".jpg";
+            imagejpeg($image, $directory);
+            imagedestroy($image);
+
+            $query = mysqli_query($mysqli, "UPDATE member SET
+                    photo   = '$directory',
+                    name    = '$post[nama]'
+                    WHERE id_member='$post[member]'");
+
+            if($query) $result = json_encode(array('success'=>true));
+            else $result = json_encode(array('success'=>false));
+            echo $result;
+        }
     }
 
 ?>
