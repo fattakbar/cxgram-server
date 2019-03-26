@@ -37,6 +37,12 @@
             if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
             else $result = json_encode(array('success'=>false));
             echo $result;
+        }else if($post['aksi'] == "single"){
+            $data = array();
+            $query = mysqli_query($mysqli, "SELECT * FROM post LEFT JOIN member ON post.id_member=member.id_member WHERE post.id_post='$post[idpost]'");
+            $row = mysqli_fetch_array($query);
+            $jml_like = mysqli_num_rows(mysqli_query($mysqli, "SELECT * FROM post_like WHERE id_post='$row[id_post]' AND id_member='$post[member]'"));
+            $jml_comment = mysqli_num_rows(mysqli_query($mysqli, "SELECT * FROM comment WHERE id_post='$row[id_post]'"));
         }
     }
 
