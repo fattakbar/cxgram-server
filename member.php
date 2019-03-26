@@ -55,6 +55,24 @@
             $result = json_encode(array('success'=>false, 'msg'=>'Akun Tidak Terdaftar'));
         }
         echo $result;
+    }else if($post['aksi'] == "cari"){
+        $data = array();
+
+        if(member_valid($post['username'], $post['password'])){
+            $query = mysqli_query($mysqli, "SELECT * FROM member WHERE name LIKE '%$post[kata]%' LIMIT $post[start], $post[limit]");
+
+            while($row = mysqli_fetch_array($query)){
+                $data[] = array(
+                    'id_member' => $row['id_member'],
+                    'foto'      => $row['photo'],
+                    'nama'      => $row['name']
+                );
+            }
+
+            if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+            else $result = json_encode(array('success'=>false));
+            echo $result;
+        }
     }
 
 ?>
