@@ -10,7 +10,7 @@
     include "library/function_validation.php";
 
     $post = json_decode(file_get_contents('php://input'), true);
-    // $post = array('username'=>'akbar', 'password'=>'akbar', 'aksi'=>'edit');
+    //$post = array('username'=>'akbar', 'password'=>'akbar', 'aksi'=>'cari', 'member'=>2, 'nama'=>'Akbar', 'foto'=>'sasfaasfas');
     if($post['aksi'] == "daftar"){
         $password = md5($post['password']);
         $jml = mysqli_num_rows(mysqli_query($mysqli, "SELECT * FROM member WHERE username='$post[username]'"));
