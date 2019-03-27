@@ -85,6 +85,8 @@
             if($query) $result = json_encode(array('success'=>true, 'profile'=>$profil, 'result'=>$data));
             else $result = json_encode(array('success'=>false));
             echo $result;
+        }else if($post['aksi'] == "tambah"){
+            //add Create Action
         }
     }
 
