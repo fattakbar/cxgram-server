@@ -86,7 +86,24 @@
             else $result = json_encode(array('success'=>false));
             echo $result;
         }else if($post['aksi'] == "tambah"){
-            //add Create Action
+            $entry = base64_decode($post['gambar']);
+            $image = imagecreatefromstring($entry);
+            $tgl = date('Y-m-d H-i-s');
+            $directory = "images/post/post ".$tgl.".jpg";
+            imagejpeg($image, $directory);
+            imagedestroy($image);
+
+            $query = mysqli_query($mysqli, "INSERT INTO post SET
+                    id_member   = '$post[member]',
+                    image       = '$directory',
+                    post        = '$post[keterangan]'
+            ");
+
+            $idpost = mysqli_insert_id($mysqli);
+
+            if($query) $result = json_encode(array('success'=>true, 'idpost'=>$idpost));
+            else $result = json_encode(array('success'=>false));
+            echo $result;
         }
     }
 
