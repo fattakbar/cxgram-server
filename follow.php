@@ -20,6 +20,31 @@
             if($query) $result = json_encode(array('success'=>true, 'result'=>$cek_follow));
             else $result = json_encode(array('success'=>false));
             echo $result;
+        }else if($post['aksi'] == "edit"){
+            $cek_follow = mysqli_num_rows(mysqli_query($mysqli, "SELECT * FROM follow WHERE id_member='$post[member]' AND member_target='$post[target]'"));
+
+            if($cek_follow == 0){
+                $query = mysqli_query($mysqli, "INSERT INTO follow SET
+                        id_member       = '$post[member]',
+                        member_target   = '$post[target]'
+                ");
+
+                if($query) mysqli_query($mysqli, "INSERT INTO notification SET
+                        id_member       = '$post[member]',
+                        message         = 'mulai mengikuti anda',
+                        member_target   = '$post[target]',
+                        new             = 1
+                ");
+                $follow = 1;
+            }else{
+                $query = mysqli_query($mysqli, "DELETE FROM follow WHERE id_member='$post[member]' AND member_target='$post[target]'");
+                $follow = 0;
+            }
+            $jml_follow = mysqli_num_rows(mysqli_query($mysqli, "SELECT * FROM follow WHERE member_target='$post[target]'"));
+
+            if($query) $result = json_encode(array('success'=>true, 'result'=>$follow, 'follower'=>$jml_follow));
+            else $result = json_encode(array('success'=>false));
+            echo $result;
         }
     }
 
