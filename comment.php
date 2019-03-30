@@ -29,6 +29,33 @@
             if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
             else $result = json_encode(array('success'=>false));
             echo $result;
+        }else if($post['aksi'] == "tambah"){
+            $member = mysqli_fetch_array(mysqli_query($mysqli, "SELECT * FROM member WHERE username='$post[username]' AND password='$post[password]'"));
+
+            $query = mysqli_query($mysqli, "INSERT INTO comment SET
+                    id_post     = '$post[idpost]',
+                    id_member   = '$member[id_member]',
+                    comment     = '$post[komentar]'
+            ");
+            $tanggal = date('Y-m-d');
+            $data = array(
+                'id'            => mysqli_insert_id($mysqli),
+                'id_member'     => $member['id_member'],
+                'nama'          => $member['name'],
+                'komentar'      => $post['komentar'],
+                'tanggal'       => tgl_indonesia($tanggal)
+            );
+
+            if($query) mysqli_query($mysqli, "INSERT INTO notification SET
+                    id_member       = '$member[id_member]',
+                    message         = 'mengomentari kiriman anda',
+                    member_target   = '$post[target]',
+                    new             = 1,
+                    id_post         = '$post[idpost]'
+            ");
+            if($query) $result = json_encode(array('success'=>true, 'result'=>$data));
+            else $result = json_encode(array('success'=>false));
+            echo $result;
         }
     }
 
